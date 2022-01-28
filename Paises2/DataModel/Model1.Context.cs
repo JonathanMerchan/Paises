@@ -13,10 +13,10 @@ namespace Paises2.DataModel
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class PlanetaEntities : DbContext
+    public partial class PlanetEntities : DbContext
     {
-        public PlanetaEntities()
-            : base("name=PlanetaEntities")
+        public PlanetEntities()
+            : base("name=PlanetEntities")
         {
         }
     
@@ -25,8 +25,11 @@ namespace Paises2.DataModel
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Paises> Paises { get; set; }
-        public virtual DbSet<PueblosCiudades> PueblosCiudades { get; set; }
-        public virtual DbSet<Ids> Ids { get; set; }
+        public virtual DbSet<Category> Category { get; set; }
+        public virtual DbSet<Citys> Citys { get; set; }
+        public virtual DbSet<Comment> Comment { get; set; }
+        public virtual DbSet<Country> Country { get; set; }
+        public virtual DbSet<Place> Place { get; set; }
+        public virtual DbSet<User> User { get; set; }
     }
 }

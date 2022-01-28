@@ -12,12 +12,11 @@ namespace Paises2.DataModel
     using System;
     using System.Collections.Generic;
     
-    public partial class PueblosCiudades
+    public partial class User
     {
-        public decimal CityTownId { get; set; }
-        public string CityTownName { get; set; }
-        public decimal CountryId { get; set; }
-    
-        public virtual Paises Paises { get; set; }
+        public int UserId { get; set; }
+        public string Email { get; set; }
+        public string Pass { get; set; }
+        public string UserName { get; set; }
     }
 }

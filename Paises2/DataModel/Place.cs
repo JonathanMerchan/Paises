@@ -12,18 +12,21 @@ namespace Paises2.DataModel
     using System;
     using System.Collections.Generic;
     
-    public partial class Paises
+    public partial class Place
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Paises()
+        public Place()
         {
-            this.PueblosCiudades = new HashSet<PueblosCiudades>();
+            this.Comment = new HashSet<Comment>();
         }
     
-        public decimal CountryId { get; set; }
-        public string CountryName { get; set; }
+        public int PlaceId { get; set; }
+        public int CityId { get; set; }
+        public string PlaceName { get; set; }
+        public string Description { get; set; }
     
+        public virtual Citys Citys { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PueblosCiudades> PueblosCiudades { get; set; }
+        public virtual ICollection<Comment> Comment { get; set; }
     }
 }

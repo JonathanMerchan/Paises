@@ -12,8 +12,16 @@ namespace Paises2.DataModel
     using System;
     using System.Collections.Generic;
     
-    public partial class Ids
+    public partial class Comment
     {
-        public decimal ID { get; set; }
+        public int CommentId { get; set; }
+        public int PlaceId { get; set; }
+        public int CategoryId { get; set; }
+        public string Comment1 { get; set; }
+        public int N_likes { get; set; }
+        public int UsarioId { get; set; }
+    
+        public virtual Category Category { get; set; }
+        public virtual Place Place { get; set; }
     }
 }

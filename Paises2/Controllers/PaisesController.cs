@@ -6,9 +6,11 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace Paises2.Controllers
 {
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class PaisesController : ApiController
     {
         //[HttpPost]
@@ -27,18 +29,28 @@ namespace Paises2.Controllers
 
 
         [HttpPost]
-        public IHttpActionResult AddCountryList(List<Models.PaisesRequest> lmodel)
+        public IHttpActionResult AddCountryList(List<PaisesRequest> lmodel)
         {
-            using (DataModel.PlanetaEntities db = new DataModel.PlanetaEntities())
+            if (lmodel is null)
             {
-                var oPaises = new DataModel.Paises();
-                foreach (Models.PaisesRequest x in lmodel)
+                return BadRequest();
+            }
+            try
+            {
+                using (DataModel.PlanetEntities db = new DataModel.PlanetEntities())
                 {
-                    oPaises.CountryName = x.CountryName;
-                    db.Paises.Add(oPaises);
-                    db.SaveChanges();|
+                    var oCountry = new DataModel.Country();
+                    foreach (Models.PaisesRequest x in lmodel)
+                    {
+                        oCountry.CountryName = x.CountryName;
+                        db.Country.Add(oCountry);
+                        db.SaveChanges();
+                    }
+                    //db.Paises.AddRange((IEnumerable<DataModel.Paises>)lmodel);
                 }
-                //db.Paises.AddRange((IEnumerable<DataModel.Paises>)lmodel);
+            }
+            catch (Exception e) {
+                return BadRequest();
             }
             return Ok("Coleccion Guardada");
         }
@@ -50,9 +62,9 @@ namespace Paises2.Controllers
         public IHttpActionResult GetCountry()
         {
             List<Models.PaisesViewModel> LPaises = new List<Models.PaisesViewModel>();
-            using (DataModel.PlanetaEntities db = new DataModel.PlanetaEntities())
+            using (DataModel.PlanetEntities db = new DataModel.PlanetEntities())
             {
-                LPaises = (from x in db.Paises
+                LPaises = (from x in db.Country
                            select new Models.PaisesViewModel
                            {
                                CountryId = (int)x.CountryId,
@@ -67,9 +79,9 @@ namespace Paises2.Controllers
         {
             Models.PaisesViewModel pais = new Models.PaisesViewModel();
 
-            using (DataModel.PlanetaEntities db = new DataModel.PlanetaEntities())
+            using (DataModel.PlanetEntities db = new DataModel.PlanetEntities())
             {
-                pais = db.Paises.Where(x => x.CountryId.Equals(id))
+                pais = db.Country.Where(x => x.CountryId.Equals(id))
                     .Select(x => new Models.PaisesViewModel
                     {
                         CountryId = (int)x.CountryId,
@@ -83,11 +95,11 @@ namespace Paises2.Controllers
         [HttpPut]
         public IHttpActionResult PutCountry(PaisesViewModel model)
         {
-            Paises ExistCountry = new Paises();
+            Country ExistCountry = new Country();
 
-            using (DataModel.PlanetaEntities db = new DataModel.PlanetaEntities())
+            using (DataModel.PlanetEntities db = new DataModel.PlanetEntities())
             { 
-                ExistCountry = db.Paises.Where(x => x.CountryId.Equals(model.CountryId))
+                ExistCountry = db.Country.Where(x => x.CountryId.Equals(model.CountryId))
                     .FirstOrDefault();
 
                 if (ExistCountry != null)
@@ -110,16 +122,16 @@ namespace Paises2.Controllers
         [HttpDelete]
         public IHttpActionResult DeleteCountry(int id)
                     {
-            DataModel.Paises ExistCountry = new DataModel.Paises();
+            DataModel.Country ExistCountry = new DataModel.Country();
 
-            using (DataModel.PlanetaEntities db = new DataModel.PlanetaEntities())
+            using (DataModel.PlanetEntities db = new DataModel.PlanetEntities())
             {
-                ExistCountry = db.Paises.Where(x => x.CountryId.Equals(id))
+                ExistCountry = db.Country.Where(x => x.CountryId.Equals(id))
                     .FirstOrDefault();
 
                 if (ExistCountry != null)
                 {
-                    db.Paises.Remove(ExistCountry);
+                    db.Country.Remove(ExistCountry);
                     db.SaveChanges();
                 }
                 else
