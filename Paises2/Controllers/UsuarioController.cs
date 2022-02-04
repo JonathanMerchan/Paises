@@ -17,10 +17,11 @@ namespace Paises2.Controllers
         [HttpPost]
         public IHttpActionResult AddUserList(List<UsuarioViewModel> lmodel)
         {
-            using (DataModel.PlanetEntities db = new DataModel.PlanetEntities())
+            try
             {
-                try
+                using (DataModel.PlanetEntities db = new DataModel.PlanetEntities())
                 {
+
                     var oUser = new DataModel.User();
                     foreach (UsuarioViewModel x in lmodel)
                     {
@@ -30,52 +31,56 @@ namespace Paises2.Controllers
                         db.User.Add(oUser);
                         db.SaveChanges();
                     }
+
+                    //db.Paises.AddRange((IEnumerable<DataModel.Paises>)lmodel);
                 }
-                catch (Exception e)
-                {
-                    return BadRequest();
-                }
-                //db.Paises.AddRange((IEnumerable<DataModel.Paises>)lmodel);
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
             }
             return Ok("Coleccion Guardada");
         }
-
 
         [HttpGet]
         public IHttpActionResult GetUsers()
         {
             List<UsuarioViewModel> LUsuarioes = new List<UsuarioViewModel>();
-            using (PlanetEntities db = new PlanetEntities())
+            try
             {
-                try
+                using (PlanetEntities db = new PlanetEntities())
                 {
-                    LUsuarioes = (from x in db.User
-                                  select new UsuarioViewModel
-                                  {
-                                      UserId = (int)x.UserId,
-                                      Email = x.Email,
-                                      Pass = x.Pass,
-                                      UserName = x.UserName
-                                  }).ToList();
+                    try
+                    {
+                        LUsuarioes = (from x in db.User
+                                      select new UsuarioViewModel
+                                      {
+                                          UserId = (int)x.UserId,
+                                          Email = x.Email,
+                                          Pass = x.Pass,
+                                          UserName = x.UserName
+                                      }).ToList();
+                    }
+                    catch (Exception e)
+                    {
+                        return BadRequest();
+                    }
                 }
-                catch (Exception e)
-                {
-                    return BadRequest();
-                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
             }
             return Ok(LUsuarioes);
         }
-
-
 
         [HttpGet]
         public IHttpActionResult GetUserByName(string name)
         {
             UsuarioViewModel Usuario = new UsuarioViewModel();
-
-            using (PlanetEntities db = new PlanetEntities())
+            try
             {
-                try
+                using (PlanetEntities db = new PlanetEntities())
                 {
                     Usuario = db.User.Where(x => x.UserName.Equals(name))
                         .Select(x => new UsuarioViewModel
@@ -87,24 +92,21 @@ namespace Paises2.Controllers
                         }
                         ).FirstOrDefault();
                 }
-                catch (Exception e)
-                {
-                    return BadRequest();
-                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
             }
             return Ok(Usuario);
         }
-
-
 
         [HttpPut]
         public IHttpActionResult PutUser(UsuarioViewModel model)
         {
             User ExistUser = new User();
-
-            using (DataModel.PlanetEntities db = new DataModel.PlanetEntities())
+            try
             {
-                try
+                using (DataModel.PlanetEntities db = new DataModel.PlanetEntities())
                 {
                     ExistUser = db.User.Where(x => x.UserId.Equals(model.UserId))
                         .FirstOrDefault();
@@ -120,23 +122,21 @@ namespace Paises2.Controllers
                         return NotFound();
                     }
                 }
-                catch (Exception e)
-                {
-                    return BadRequest();
-                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
             }
             return Ok();
         }
-
 
         [HttpDelete]
         public IHttpActionResult DeleteUser(int id)
         {
             DataModel.User ExistUser = new DataModel.User();
-
-            using (DataModel.PlanetEntities db = new DataModel.PlanetEntities())
+            try
             {
-                try
+                using (DataModel.PlanetEntities db = new DataModel.PlanetEntities())
                 {
                     ExistUser = db.User.Where(x => x.UserId.Equals(id))
                         .FirstOrDefault();
@@ -151,15 +151,13 @@ namespace Paises2.Controllers
                         return NotFound();
                     }
                 }
-                catch (Exception e)
-                {
-                    return BadRequest();
-                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
             }
             return Ok();
         }
-
-
 
         [HttpGet]
         public IHttpActionResult ValidateUser(string email, string pass)
@@ -188,7 +186,6 @@ namespace Paises2.Controllers
                     {
                         return BadRequest();
                     }
-
                 }
             }
             catch (Exception e)
@@ -197,8 +194,5 @@ namespace Paises2.Controllers
             }
             return Ok(tk);
         }
-
-
-
     }
 }

@@ -31,6 +31,7 @@ namespace Paises2.Controllers
         [HttpPost]
         public IHttpActionResult AddCountryList(List<PaisesRequest> lmodel)
         {
+
             if (lmodel is null)
             {
                 return BadRequest();
@@ -49,7 +50,8 @@ namespace Paises2.Controllers
                     //db.Paises.AddRange((IEnumerable<DataModel.Paises>)lmodel);
                 }
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 return BadRequest();
             }
             return Ok("Coleccion Guardada");
@@ -62,14 +64,21 @@ namespace Paises2.Controllers
         public IHttpActionResult GetCountry()
         {
             List<Models.PaisesViewModel> LPaises = new List<Models.PaisesViewModel>();
-            using (DataModel.PlanetEntities db = new DataModel.PlanetEntities())
+            try
             {
-                LPaises = (from x in db.Country
-                           select new Models.PaisesViewModel
-                           {
-                               CountryId = (int)x.CountryId,
-                               CountryName = x.CountryName
-                           }).ToList();
+                using (DataModel.PlanetEntities db = new DataModel.PlanetEntities())
+                {
+                    LPaises = (from x in db.Country
+                               select new Models.PaisesViewModel
+                               {
+                                   CountryId = (int)x.CountryId,
+                                   CountryName = x.CountryName
+                               }).ToList();
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
             }
             return Ok(LPaises);
         }
@@ -78,16 +87,22 @@ namespace Paises2.Controllers
         public IHttpActionResult GetCountryById(int id)
         {
             Models.PaisesViewModel pais = new Models.PaisesViewModel();
-
-            using (DataModel.PlanetEntities db = new DataModel.PlanetEntities())
+            try
             {
-                pais = db.Country.Where(x => x.CountryId.Equals(id))
-                    .Select(x => new Models.PaisesViewModel
-                    {
-                        CountryId = (int)x.CountryId,
-                        CountryName = x.CountryName
-                    }
-                    ).FirstOrDefault();
+                using (DataModel.PlanetEntities db = new DataModel.PlanetEntities())
+                {
+                    pais = db.Country.Where(x => x.CountryId.Equals(id))
+                        .Select(x => new Models.PaisesViewModel
+                        {
+                            CountryId = (int)x.CountryId,
+                            CountryName = x.CountryName
+                        }
+                        ).FirstOrDefault();
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
             }
             return Ok(pais);
         }
@@ -96,23 +111,28 @@ namespace Paises2.Controllers
         public IHttpActionResult PutCountry(PaisesViewModel model)
         {
             Country ExistCountry = new Country();
-
-            using (DataModel.PlanetEntities db = new DataModel.PlanetEntities())
-            { 
-                ExistCountry = db.Country.Where(x => x.CountryId.Equals(model.CountryId))
-                    .FirstOrDefault();
-
-                if (ExistCountry != null)
+            try
+            {
+                using (DataModel.PlanetEntities db = new DataModel.PlanetEntities())
                 {
-                    Console.WriteLine("entro el en if");
-                    ExistCountry.CountryName = model.CountryName;
-                    db.SaveChanges();
-                }
-                else 
-                {
-                    return NotFound();
-                }
+                    ExistCountry = db.Country.Where(x => x.CountryId.Equals(model.CountryId))
+                        .FirstOrDefault();
 
+                    if (ExistCountry != null)
+                    {
+                        Console.WriteLine("entro el en if");
+                        ExistCountry.CountryName = model.CountryName;
+                        db.SaveChanges();
+                    }
+                    else
+                    {
+                        return NotFound();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
             }
             return Ok();
         }
@@ -121,29 +141,31 @@ namespace Paises2.Controllers
 
         [HttpDelete]
         public IHttpActionResult DeleteCountry(int id)
-                    {
+        {
             DataModel.Country ExistCountry = new DataModel.Country();
-
-            using (DataModel.PlanetEntities db = new DataModel.PlanetEntities())
+            try
             {
-                ExistCountry = db.Country.Where(x => x.CountryId.Equals(id))
-                    .FirstOrDefault();
-
-                if (ExistCountry != null)
+                using (DataModel.PlanetEntities db = new DataModel.PlanetEntities())
                 {
-                    db.Country.Remove(ExistCountry);
-                    db.SaveChanges();
-                }
-                else
-                {
-                    return NotFound();
-                }
+                    ExistCountry = db.Country.Where(x => x.CountryId.Equals(id))
+                        .FirstOrDefault();
 
+                    if (ExistCountry != null)
+                    {
+                        db.Country.Remove(ExistCountry);
+                        db.SaveChanges();
+                    }
+                    else
+                    {
+                        return NotFound();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
             }
             return Ok();
         }
-
-
-
     }
 }

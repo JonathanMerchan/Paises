@@ -20,8 +20,8 @@ namespace Paises2.DataModel
             this.Comment = new HashSet<Comment>();
         }
     
-        public int CatId { get; set; }
-        public string Categoria { get; set; }
+        public int CategoryId { get; set; }
+        public string CategoryName { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Comment> Comment { get; set; }

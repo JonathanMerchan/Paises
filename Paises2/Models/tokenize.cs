@@ -9,28 +9,24 @@ namespace Paises2.Models
 {
     public class Tokenize
     {
-
         public static string CreateToken(string email, string pass) 
         {
             string tok ="";
             SHA256 sHA256 = SHA256.Create($"{email}:CM1987+{pass}");
             Task.Run( () =>  nombremetodo());
             //PErsistir el sha en la base de datos para este usuario
-
-            return sHA256.ToString();
+            tok = sHA256.ToString();
+            return tok;
         }
 
         public static bool ValidateToken(string token)
         {
             bool t = true;
-
             return t;
-        
         }
 
         public static async Task nombremetodo() {
             string a = string.Empty;
-            
         }
 
     }
